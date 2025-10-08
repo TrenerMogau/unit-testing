@@ -73,28 +73,28 @@ Definition: tests are derived from the implementation and internal structure. Th
 Common techniques (and how to apply them with unit tests):
 
 - Path-testing
- 	- Idea: choose inputs that execute different control-flow paths (if/else branches, loops with different iteration counts).
- 	- How to use in unit tests: craft inputs to force each branch and loop behavior; assert expected internal outcomes or final outputs.
- 	- Example: if function has an early-return for empty inputs, write a test for empty input and a test for non-empty.
+  - Idea: choose inputs that execute different control-flow paths (if/else branches, loops with different iteration counts).
+  - How to use in unit tests: craft inputs to force each branch and loop behavior; assert expected internal outcomes or final outputs.
+  - Example: if function has an early-return for empty inputs, write a test for empty input and a test for non-empty.
 
 - Statement coverage
- 	- Idea: measure which lines/statements of code have been executed by the test suite.
- 	- How to use: write tests to execute un-covered lines until you reach your target (e.g., 80% or 90%), then use a coverage tool (such as `coverage.py`) to measure.
- 	- Note: coverage metrics are indicators, not guarantees of correctness.
+  - Idea: measure which lines/statements of code have been executed by the test suite.
+  - How to use: write tests to execute un-covered lines until you reach your target (e.g., 80% or 90%), then use a coverage tool (such as `coverage.py`) to measure.
+  - Note: coverage metrics are indicators, not guarantees of correctness.
 
 - Random testing (white-box fuzzing)
- 	- Idea: generate many random inputs with awareness of internal structure to try to hit unusual paths. Can be guided by knowledge of internal branches.
- 	- How to use in `unittest`: write a test method that loops over randomly generated inputs and uses assertions or checks for invariants. Limit iterations to keep tests deterministic (seed the RNG).
- 	- Example (in TestCase): seed the random generator and run 100 iterations asserting invariants.
+  - Idea: generate many random inputs with awareness of internal structure to try to hit unusual paths. Can be guided by knowledge of internal branches.
+  - How to use in `unittest`: write a test method that loops over randomly generated inputs and uses assertions or checks for invariants. Limit iterations to keep tests deterministic (seed the RNG).
+  - Example (in TestCase): seed the random generator and run 100 iterations asserting invariants.
 
 - Exhaustive testing
- 	- Idea: try every possible input (or every combination) when the domain is small and feasible.
- 	- How to use: enumerate all inputs in a test and assert the exact expected output for each. Useful for small algorithms (e.g., bit-twiddling with 8-bit values).
- 	- Caveat: combinatorial explosion makes this impractical for large inputs.
+  - Idea: try every possible input (or every combination) when the domain is small and feasible.
+  - How to use: enumerate all inputs in a test and assert the exact expected output for each. Useful for small algorithms (e.g., bit-twiddling with 8-bit values).
+  - Caveat: combinatorial explosion makes this impractical for large inputs.
 
 - Equivalence partitioning & boundary class testing (white-box view)
- 	- While typically black-box techniques, they are useful in white-box testing to choose representative inputs that exercise different internal branches.
- 	- Use implementation insight to form partitions that hit different internal code paths (e.g., input size 0, 1..n, >n to force size-related branches), and test boundaries around branch conditions.
+  - While typically black-box techniques, they are useful in white-box testing to choose representative inputs that exercise different internal branches.
+  - Use implementation insight to form partitions that hit different internal code paths (e.g., input size 0, 1..n, >n to force size-related branches), and test boundaries around branch conditions.
 
 When to prefer glassbox: when you need to verify internal logic, fix bugs in complex conditionals, or drive coverage metrics for critical modules.
 
@@ -105,31 +105,31 @@ Definition: tests are derived from requirements and observable behavior only. Yo
 Common techniques (and how to apply them):
 
 - Path-testing (black-box perspective)
- 	- In strict black-box testing you don't inspect internal control flow, but you can still aim to trigger different 'paths' through the specification by varying inputs that correspond to different behaviors.
- 	- For example, if a spec says "if input has property A do X, else do Y", write tests for inputs with and without property A.
+  - In strict black-box testing you don't inspect internal control flow, but you can still aim to trigger different 'paths' through the specification by varying inputs that correspond to different behaviors.
+  - For example, if a spec says "if input has property A do X, else do Y", write tests for inputs with and without property A.
 
 - Statement coverage (black-box limits)
- 	- Statement coverage requires instrumentation or access to source, so strictly black-box testers can't directly measure it.
- 	- However, you can rely on external tools (or a developer-provided coverage report) to evaluate how much of the implementation your black-box tests exercised. The test author should focus on behavioral correctness.
+  - Statement coverage requires instrumentation or access to source, so strictly black-box testers can't directly measure it.
+  - However, you can rely on external tools (or a developer-provided coverage report) to evaluate how much of the implementation your black-box tests exercised. The test author should focus on behavioral correctness.
 
 - Random testing (black-box fuzzing)
- 	- Idea: generate random inputs to discover unexpected failures (crashes, exceptions, incorrect outputs). This is popularly called fuzzing.
- 	- How to use in unit tests: within a TestCase, run many random inputs and assert expected invariants or that no unhandled exceptions occur (unless expected). Prefer deterministic seeds or save failing inputs.
- 	- Example: random strings sent to a parser API to ensure it never crashes and gives a reasonable error for invalid input.
+  - Idea: generate random inputs to discover unexpected failures (crashes, exceptions, incorrect outputs). This is popularly called fuzzing.
+  - How to use in unit tests: within a TestCase, run many random inputs and assert expected invariants or that no unhandled exceptions occur (unless expected). Prefer deterministic seeds or save failing inputs.
+  - Example: random strings sent to a parser API to ensure it never crashes and gives a reasonable error for invalid input.
 
 - Exhaustive testing
- 	- Same concept as white-box: enumerate all inputs, but here you do so based only on the input specification. Feasible for tiny domains.
+  - Same concept as white-box: enumerate all inputs, but here you do so based only on the input specification. Feasible for tiny domains.
 
 - Equivalence partitioning
- 	- Idea: split the input domain into classes that are expected to behave similarly, then select representative values from each class.
- 	- Example partitions for an integer parameter that is defined as "non-negative and <= 100":
-  		- valid low (0-10), valid mid (11-90), valid high (91-100)
-  		- invalid negative (<0), invalid >100
- 	- Write tests that pick a representative from each class.
+  - Idea: split the input domain into classes that are expected to behave similarly, then select representative values from each class.
+  - Example partitions for an integer parameter that is defined as "non-negative and <= 100":
+    - valid low (0-10), valid mid (11-90), valid high (91-100)
+    - invalid negative (<0), invalid >100
+  - Write tests that pick a representative from each class.
 
 - Boundary class testing (boundary value analysis)
- 	- Idea: errors often occur at the edges of partitions. Test values at, just below, and just above boundaries.
- 	- Example: for the range 0..100 test -1, 0, 1, 99, 100, 101.
+  - Idea: errors often occur at the edges of partitions. Test values at, just below, and just above boundaries.
+  - Example: for the range 0..100 test -1, 0, 1, 99, 100, 101.
 
 When to prefer black-box: when you are validating conformance to requirements, testing external APIs, or when the implementation may change frequently but the contract remains stable.
 
